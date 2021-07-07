@@ -5,6 +5,7 @@ import Focus from "./Focus";
 import Break from "./Break";
 import RunningSession from "./RunningSession";
 
+
 // These functions are defined outside of the component to insure they do not have access to state
 // and are, therefore more likely to be pure.
 
@@ -59,26 +60,28 @@ function Pomodoro() {
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   // The current session - null where there is no session running
   const [session, setSession] = useState(null);
+  // The state of my play and pause buttons
+  const [disabled, setDisabled] = useState(false);
 
-  // ******************************const focusDuration = 25;
-  const handleIncrementClickForFocus = (maxDuration, currenttime) => {
+  // // ******************************const focusDuration = 25;
+  const handleIncrementClickForFocus = (maxDuration) => {
     if (focusDuration < maxDuration) {
-      setFocusDuration((currenttime) => currenttime + 1);
+      setFocusDuration((currenttime) => currenttime + 5);
     }
   };
-  const handleDecrementClickForFocus = (minDuration, currenttime) => {
+  const handleDecrementClickForFocus = (minDuration) => {
     if (focusDuration > minDuration) {
-      setFocusDuration((currenttime) => currenttime - 1);
+      setFocusDuration((currenttime) => currenttime - 5);
     }
   };
   // ******************************const breakDuration = 5;
 
-  const handleIncrementClickForBreak = (maxDuration, currenttime) => {
+  const handleIncrementClickForBreak = (maxDuration) => {
     if (breakDuration < maxDuration) {
       setBreakDuration((currenttime) => currenttime + 1);
     }
   };
-  const handleDecrementClickForBreak = (minDuration, currenttime) => {
+  const handleDecrementClickForBreak = (minDuration) => {
     if (breakDuration > minDuration) {
       setBreakDuration((currenttime) => currenttime - 1);
     }
@@ -104,6 +107,7 @@ function Pomodoro() {
    * Called whenever the play/pause button is clicked.
    */
   function playPause() {
+    setDisabled(true);
     setIsTimerRunning((prevState) => {
       const nextState = !prevState;
       if (nextState) {
@@ -126,20 +130,22 @@ function Pomodoro() {
   const displaySession = () => {
     if (session !== null) {
       return session.label === "Focusing" ? (
-        <RunningSession session={session} duration={focusDuration} />
+        <RunningSession session={session} duration={focusDuration} isTimerRunning={isTimerRunning}/>
       ) : (
-        <RunningSession session={session} duration={breakDuration} />
+        <RunningSession session={session} duration={breakDuration} isTimerRunning={isTimerRunning}/>
       );
     }
   };
 
-  console.log(session)
-
-  const stopSession =() => {
+  const stopSession = () => {
+    //reset all the state to initial
+    setFocusDuration(25);
+    setBreakDuration(5);
+    setIsTimerRunning(false);
     setSession(null);
-    ;
-
+    setDisabled(false);
   };
+
   return (
     <div className="pomodoro">
       <div className="row">
@@ -147,11 +153,13 @@ function Pomodoro() {
           focusDuration={focusDuration}
           handleDecrementClick={() => handleDecrementClickForFocus(5)}
           handleIncrementClick={() => handleIncrementClickForFocus(60)}
+          disabled={disabled}
         />
         <Break
           breakDuration={breakDuration}
           handleDecrementClick={() => handleDecrementClickForBreak(1)}
           handleIncrementClick={() => handleIncrementClickForBreak(15)}
+          disabled={disabled}
         />
       </div>
       <div className="row">
@@ -176,21 +184,22 @@ function Pomodoro() {
                 })}
               />
             </button>
-            {/* TODO: Implement stopping the current focus or break session. and disable the stop button when there is no active session */}
-            {/* TODO: Disable the stop button when there is no active session */}
+            {/* Implement stopping the current focus or break session. and disable the stop button when there is no active session */}
+            {/* Disable the stop button when there is no active session */}
             <button
               type="button"
               className="btn btn-secondary"
               data-testid="stop"
               title="Stop the session"
               onClick={stopSession}
+              disabled={!isTimerRunning}
             >
               <span className="oi oi-media-stop" />
             </button>
           </div>
         </div>
       </div>
-      <>{displaySession()}</>
+      <div>{displaySession()}</div>
     </div>
   );
 }
