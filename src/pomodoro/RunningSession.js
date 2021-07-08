@@ -5,6 +5,7 @@ import { minutesToDuration } from "../utils/duration";
 function RunningSession({ session, duration, isTimerRunning }) {
 
   const widthPercentage = 100 - (session.timeRemaining / (60*duration)) * 100;
+  console.log(widthPercentage)
   return (
     <div>
       {/* This area should show only when there is an active focus or break - i.e. the session is running or is paused */}
@@ -31,8 +32,8 @@ function RunningSession({ session, duration, isTimerRunning }) {
               role="progressbar"
               aria-valuemin="0"
               aria-valuemax="100"
-              aria-valuenow={widthPercentage}//{duration - session?.timeRemaining} // TODO: Increase aria-valuenow as elapsed time increases
-              style={{ width: `${widthPercentage}%` }} // TODO: Increase width % as elapsed time increases
+              aria-valuenow={widthPercentage}// Increase aria-valuenow as elapsed time increases
+              style={{ width: `${widthPercentage}%` }} // Increase width % as elapsed time increases
             />
           </div>
         </div>

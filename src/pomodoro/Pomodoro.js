@@ -63,7 +63,7 @@ function Pomodoro() {
   // The state of my play and pause buttons
   const [disabled, setDisabled] = useState(false);
 
-  // // ******************************const focusDuration = 25;
+
   const handleIncrementClickForFocus = (maxDuration) => {
     if (focusDuration < maxDuration) {
       setFocusDuration((currenttime) => currenttime + 5);
@@ -74,8 +74,7 @@ function Pomodoro() {
       setFocusDuration((currenttime) => currenttime - 5);
     }
   };
-  // ******************************const breakDuration = 5;
-
+ 
   const handleIncrementClickForBreak = (maxDuration) => {
     if (breakDuration < maxDuration) {
       setBreakDuration((currenttime) => currenttime + 1);
@@ -100,7 +99,7 @@ function Pomodoro() {
       }
       return setSession(nextTick);
     },
-    isTimerRunning ? 10 : null
+    isTimerRunning ? 1000 : null
   );
 
   /**
